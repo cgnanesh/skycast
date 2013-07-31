@@ -41,4 +41,60 @@ class Skycast
 		puts(msg)
 		gets.chomp.split.map(&:to_i)
 	end
+
+	def min_no_of_clicks
+		prev_ch = nil
+		clicks = 0
+		curr_ch = nil
+		browse_channels.each do |bc|
+			direct_clicks = bc.to_s.length
+			up_or_down_clicks = no_of_up_or_down_clicks(curr_ch, bc)
+			back_click = no_of_back_clicks(prev_ch, bc)
+			clicks += [direct_clicks, up_or_down_clicks, back_click].min
+			prev_ch = curr_ch
+			curr_ch = bc
+		end
+		clicks
+	end
+
+	def no_of_up_or_down_clicks(curr_ch,next_ch)
+		return 999999 if curr_ch.nil?
+		abs_diff = (curr_ch - next_ch).abs
+		cycle_diff = (min..max).count - abs_diff
+
+		blocked_channels_count_in_range = if curr_ch < next_ch
+			blocked_channels.select{|bl| (curr_ch..next_ch).include? bl  }.count
+		else
+			blocked_channels.select{|bl| (next_ch..curr_ch).include? bl  }.count
+		end
+		blocked_diff = abs_diff - blocked_channels_count_in_range
+
+		blocked_channels_count_in_range_with_cycle = if curr_ch < next_ch
+			blocked_channels.select{|bl| ((@min..curr_ch).include? bl) || ((next_ch..@max).include? bl) }.count
+		else
+			blocked_channels.select{|bl| ((@min..next_ch).include? bl) || ((curr_ch..@max).include? bl) }.count
+		end
+
+		blocked_diff_with_cycle = cycle_diff - blocked_channels_count_in_range_with_cycle
+
+		[abs_diff, cycle_diff, blocked_diff, blocked_diff_with_cycle].min
+	end
+
+	def no_of_back_clicks(prev_ch,next_ch)
+		if prev_ch == next_ch
+			1
+		else
+			1 + no_of_up_or_down_clicks(prev_ch,next_ch)
+		end
+	end
+
+	def process
+		read_min_max_channels
+		read_blocked_channels
+		read_browse_channels
+		clicks=min_no_of_clicks
+		puts "No of clicks required #{clicks}"
+		clicks
+	end
+
 end
