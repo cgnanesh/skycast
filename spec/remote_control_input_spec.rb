@@ -1,8 +1,8 @@
-require 'skycast'
+require 'remote_control'
 
-describe 'SkycastInput' do
+describe 'RemoteControlInput' do
   it 'checks no of inputs given for min and max values of channel' do
-    s=Skycast.new
+    s=RemoteControl.new
   	s.should_receive(:gets).and_return("1 10 20")
     expect { s.read_min_max_channels }.to raise_error("wrong no values for min and max channels")
     s.should_receive(:gets).and_return("0 10")
@@ -16,7 +16,7 @@ describe 'SkycastInput' do
   end
 
   it "blocked channels validations" do
-  	s=Skycast.new
+  	s=RemoteControl.new
   	s.min = 10
   	s.max = 20
   	s.should_receive(:gets).and_return("2 10 21")
@@ -31,7 +31,7 @@ describe 'SkycastInput' do
 	end
 
 	it "browse channels validations" do
-		s=Skycast.new
+		s=RemoteControl.new
   	s.min = 10
   	s.max = 20
   	s.blocked_channels = [14,15]

@@ -1,8 +1,8 @@
-require 'skycast'
+require 'remote_control'
 
-describe 'SkycastInput' do
+describe 'RemoteControlClicks' do
 	before :each do 
-		@s=Skycast.new
+		@s=RemoteControl.new
 		@s.min = 103
 		@s.max = 200
 		@s.blocked_channels = []
@@ -104,7 +104,7 @@ describe 'SkycastInput' do
 	end
 
 	it "check end to end process" do
-		s=Skycast.new
+		s=RemoteControl.new
 		s.should_receive(:gets).and_return("1 20")
 		s.should_receive(:gets).and_return("2 18 19")
 		s.should_receive(:gets).and_return("5 15 14 17 1 17")

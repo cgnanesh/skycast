@@ -1,4 +1,4 @@
-class Skycast
+class RemoteControl
 	attr_accessor :min , :max, :blocked_channels_count, :blocked_channels, :browse_channels_count, :browse_channels
 
 	def read_min_max_channels
